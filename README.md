@@ -33,7 +33,9 @@ taller_ordenamiento_busqueda/
 ├── docs/
 │   ├── graficos/           # Gráficos comparativos PNG
 │   └── resultados/         # Documentación adicional
-├── build.bat               # Script de compilación Java
+├── build.bat               # Compila Java y ejecuta Java + Python
+├── run.bat                 # Ejecuta Java precompilado + Python
+├── clean.bat               # Limpia archivos compilados
 └── requirements.txt        # Dependencias Python
 ```
 
@@ -54,7 +56,6 @@ No requiere instalación especial. Solo asegúrate de tener el JDK instalado y c
 
 ### Python
 ```bash
-cd src/python
 pip install -r requirements.txt
 ```
 
@@ -68,7 +69,7 @@ Las dependencias principales son:
 
 ## Uso Paso a Paso
 
-### Opción 1: Ejecutar todo desde Java (recomendado)
+### Opción 1: Ejecutar todo (Java + Python) - Recomendado
 
 Desde la raíz del proyecto, ejecuta:
 
@@ -76,54 +77,74 @@ Desde la raíz del proyecto, ejecuta:
 build.bat
 ```
 
-Esto compila y ejecuta Java, generando los datos de prueba y los resultados.
+Este script realiza:
+1. Compila el código Java
+2. Ejecuta `MainCompleto.java` (genera datos de prueba y resultados en `data/output/`)
+3. Ejecuta `main_completo.py` (genera gráficos comparativos en `docs/graficos/`)
 
-Luego, para generar los gráficos con Python:
+**Requisito:** Tener Java y Python instalados.
 
-```bash
-cd src/python
-python main_completo.py
-```
+### Opción 2: Ejecutar paso a paso
 
-### Opción 2: Ejecutar componentes por separado
-
-#### Solo Java:
+#### Paso 1: Compilar y ejecutar Java
 ```
 build.bat
 ```
 
+#### Paso 2: Ejecutar solo Python (si ya tienes los datos generados)
+```
+run.bat
+```
+
+O directamente:
+```bash
+python src/python/main_completo.py --input data/input --output data/output --graficos docs/graficos
+```
+
+### Opción 3: Ejecutar componentes individuales
+
+#### Solo Java (sin Python):
+Las ejecuciones de Java ya generan los resultados en `data/output/`.
+
 #### Solo Python (requiere datos existentes en `data/input/`):
 ```bash
 cd src/python
-python main_ordenamiento.py
-python main_busqueda.py
 python main_completo.py
 ```
 
-**Scripts adicionales disponibles:**
-- `run.bat` - Ejecuta Java precompilado
-- `run-ordenamiento.bat` - Solo módulo de ordenamiento Java
-- `run-busqueda.bat` - Solo módulo de búsqueda Java
-- `scripts/run_python_benchmarks.bat` - Ejecuta benchmarks Python
+**Scripts disponibles:**
+| Script | Descripción |
+|--------|-------------|
+| `build.bat` | Compila Java + Ejecuta Java + Ejecuta Python |
+| `run.bat` | Ejecuta Java precompilado + Python |
+| `clean.bat` | Limpia archivos compilados (`bin/` y datos temporales) |
+| `scripts/run_python_benchmarks.bat` | Ejecuta solo el benchmark de Python |
 
 ---
 
 ## Archivos Generados
 
 ### Datos de entrada (`data/input/`):
-- `datos_10000.txt` - 10,000 elementos
-- `datos_100000.txt` - 100,000 elementos
-- `datos_1000000.txt` - 1,000,000 elementos
+Archivos de texto con datos aleatorios (generados automáticamente):
+| Archivo | Tamaño |
+|---------|--------|
+| `datos_10000.txt` | 10,000 elementos |
+| `datos_100000.txt` | 100,000 elementos |
+| `datos_1000000.txt` | 1,000,000 elementos |
 
 ### Resultados (`data/output/`):
-- `resultados_java.csv` y `resultados_java.json` - Tiempos Java
-- `resultados_python.csv` y `resultados_python.json` - Tiempos Python
-- `comparacion_python_java.json` - Comparación cruzada
+| Archivo | Descripción |
+|---------|-------------|
+| `resultados_java.csv` / `.json` | Tiempos de ejecución Java |
+| `resultados_python.csv` / `.json` | Tiempos de ejecución Python |
+| `comparacion_python_java.json` | Comparación cruzada |
 
 ### Gráficos (`docs/graficos/`):
-- `comparacion_ordenamiento.png` - Rendimiento algoritmos de ordenamiento
-- `comparacion_busqueda.png` - Rendimiento algoritmos de búsqueda
-- `comparacion_por_tamaño.png` - Comparación por tamaño de datos
+| Archivo | Descripción |
+|---------|-------------|
+| `comparacion_ordenamiento.png` | Rendimiento algoritmos de ordenamiento |
+| `comparacion_busqueda.png` | Rendimiento algoritmos de búsqueda |
+| `comparacion_por_tamaño.png` | Comparación por tamaño de datos |
 
 ---
 
@@ -150,6 +171,11 @@ python main_completo.py
 ---
 
 ## Notas Importantes
+
+- **Carpetas compartidas**: Java y Python usan las mismas carpetas:
+  - `data/input/` - Datos de prueba (generados por Java, usados por ambos)
+  - `data/output/` - Resultados CSV/JSON (generados por ambos)
+  - `docs/graficos/` - Gráficos (generados por Python)
 
 - **Generación de datos**: Los archivos de datos se generan una sola vez y se reutilizan entre ejecuciones para garantizar comparaciones consistentes.
 
