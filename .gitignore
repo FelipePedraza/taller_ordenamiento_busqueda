@@ -1,6 +1,9 @@
+#Compilacion de archivos a ignorar
+bin
+
 # Documentos de resultados
 docs
-
+s
 # Data de entrada y salida
 data
 

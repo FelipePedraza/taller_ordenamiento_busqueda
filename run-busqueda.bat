@@ -1,17 +1,17 @@
 @echo off
 chcp 65001 >nul
 
-echo ╔════════════════════════════════════════════════════════════╗
-echo ║     Ejecutar Pruebas de Búsqueda                           ║
-echo ╚════════════════════════════════════════════════════════════╝
+echo ============================================================
+echo     Ejecutar Pruebas de Busqueda
+echo ============================================================
 echo.
 
 set BIN_DIR=bin
 set MAIN_CLASS=org.algoritmos.main.MainBusqueda
 
 if not exist %BIN_DIR% (
-    echo ❌ Directorio %BIN_DIR% no encontrado.
-    echo    Ejecuta build.bat primero para compilar.
+    echo ERROR: Directorio %BIN_DIR% no encontrado.
+    echo Ejecuta build.bat primero para compilar.
     pause
     exit /b 1
 )
