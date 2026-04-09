@@ -1,0 +1,11 @@
+# Documentos de resultados
+docs
+
+# Data de entrada y salida
+data
+
+# Configuracion de claude
+.claude
+
+# Cache de python
+/__pycache__

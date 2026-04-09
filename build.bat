@@ -22,11 +22,6 @@ echo.
 
 REM Compilar todas las clases
 echo [2/4] Compilando archivos Java...
-set SOURCES=
-for /r %SRC_DIR% %%f in (*.java) do (
-    set SOURCES=!SOURCES! %%f
-)
-
 javac -d %BIN_DIR% -encoding UTF-8 -sourcepath %SRC_DIR% %SRC_DIR%\org\algoritmos\util\*.java %SRC_DIR%\org\algoritmos\ordenamiento\*.java %SRC_DIR%\org\algoritmos\busqueda\*.java %SRC_DIR%\org\algoritmos\main\*.java
 
 if %ERRORLEVEL% neq 0 (
