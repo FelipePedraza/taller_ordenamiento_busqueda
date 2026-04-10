@@ -17,26 +17,33 @@ taller_ordenamiento_busqueda/
 │   │   └── org/algoritmos/
 │   │       ├── ordenamiento/   # 5 algoritmos de ordenamiento
 │   │       ├── busqueda/       # 3 algoritmos de búsqueda
+│   │       ├── controller/     # Controlador de benchmarks (BenchmarkController)
+│   │       ├── core/           # Componentes core (BenchmarkService, BenchmarkResult)
 │   │       ├── util/           # Utilidades (Timer, DataGenerator, ResultExporter)
-│   │       └── main/           # Clases ejecutables
+│   │       └── Main.java       # Clase ejecutable principal
 │   └── python/             # Código fuente Python
-│       ├── ordenamiento/   # 5 algoritmos (Shaker, QuickSort, Heap, Merge, Radix)
-│       ├── busqueda/       # 3 algoritmos (Binaria, Ternaria, Jump)
-│       ├── utils/          # DataLoader, Timer, ResultExporter
-│       ├── visualizacion/  # Generador de gráficos
-│       ├── main_ordenamiento.py
-│       ├── main_busqueda.py
-│       └── main_completo.py
+│       ├── ordenamiento/       # 5 algoritmos (Shaker, QuickSort, Heap, Merge, Radix)
+│       ├── busqueda/           # 3 algoritmos (Binaria, Ternaria, Jump)
+│       ├── controllers/        # Controlador de benchmarks (benchmark_controller)
+│       ├── core/               # Componentes core (benchmark_service, models)
+│       ├── utils/              # Utilidades (data_loader, Timer, result_exporter)
+│       ├── visualizacion/      # Generador de gráficos
+│       ├── main.py             # Clase ejecutable principal
+│       └── requirements.txt    # Dependencias Python
 ├── data/
 │   ├── input/              # Datos de prueba generados (10K, 100K, 1M)
 │   └── output/             # Resultados CSV y JSON
 ├── docs/
 │   ├── graficos/           # Gráficos comparativos PNG
 │   └── resultados/         # Documentación adicional
+├── scripts/                # Scripts auxiliares
+│   ├── run_python_benchmarks.bat
+│   └── run_python_benchmarks.sh
+├── tests/                  # Pruebas unitarias
 ├── build.bat               # Compila Java y ejecuta Java + Python
 ├── run.bat                 # Ejecuta Java precompilado + Python
 ├── clean.bat               # Limpia archivos compilados
-└── requirements.txt        # Dependencias Python
+└── README.md               # Este archivo
 ```
 
 ---
