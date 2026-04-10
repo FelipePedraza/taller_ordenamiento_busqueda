@@ -1,35 +1,31 @@
 #!/usr/bin/env python3
 """
-Main Búsqueda - Script para ejecutar pruebas de algoritmos de búsqueda.
+Main Busqueda - Script para ejecutar pruebas de algoritmos de busqueda.
 
-Este script ejecuta todos los algoritmos de búsqueda implementados
-sobre los datasets ordenados de diferentes tamaños.
-
-Uso:
-    python main_busqueda.py
-    python main_busqueda.py --output custom_dir
+Este script ejecuta todos los algoritmos de busqueda implementados
+sobre los datasets ordenados de diferentes tamanos.
 
 Algoritmos probados:
-- Búsqueda Binaria
-- Búsqueda Ternaria
+- Busqueda Binaria
+- Busqueda Ternaria
 - Jump Search
 
 Nota: Los arreglos deben estar ordenados para estos algoritmos.
-Se busca el elemento en la posición media del arreglo.
+Se busca el elemento en la posicion media del arreglo.
 """
 
 import sys
 import argparse
 from pathlib import Path
 
-# Asegurar que el directorio src/python esté en el path
+# Asegurar que el directorio src/python este en el path
 script_dir = Path(__file__).parent
 if str(script_dir) not in sys.path:
     sys.path.insert(0, str(script_dir))
 
 from busqueda import busqueda_binaria, busqueda_ternaria, jump_search
 from utils.data_loader import DataLoader
-from utils.timer import AlgorithmTimer, TimingResult
+from utils.timer import medir_busqueda
 from utils.result_exporter import ResultExporter, ResultadoPrueba
 
 
@@ -38,7 +34,7 @@ def run_busqueda_benchmark(
     result_exporter: ResultExporter
 ) -> list:
     """
-    Ejecuta el benchmark de todos los algoritmos de búsqueda.
+    Ejecuta el benchmark de todos los algoritmos de busqueda.
 
     Args:
         data_loader: Instancia de DataLoader para cargar datos
@@ -51,7 +47,7 @@ def run_busqueda_benchmark(
 
     # Cargar datos de prueba
     print("=" * 60)
-    print("BENCHMARK DE ALGORITMOS DE BÚSQUEDA")
+    print("BENCHMARK DE ALGORITMOS DE BUSQUEDA")
     print("=" * 60)
     print("\nCargando archivos de datos...")
 
@@ -77,21 +73,21 @@ def run_busqueda_benchmark(
     # Ejecutar pruebas
     for size_key, data in sorted(datos.items(), key=lambda x: int(x[0])):
         if not data:
-            print(f"\n[!] No hay datos para tamaño {size_key}, saltando...")
+            print(f"\n[!] No hay datos para tamano {size_key}, saltando...")
             continue
 
-        # Asegurar que los datos estén ordenados (requerido para búsqueda)
+        # Asegurar que los datos esten ordenados
         if data != sorted(data):
-            print(f"\n  Ordenando datos para búsqueda...")
+            print(f"\n  Ordenando datos para busqueda...")
             data = sorted(data)
 
-        # Buscar elemento en la posición media (según requerimiento)
+        # Buscar elemento en la posicion media
         target_index = len(data) // 2
         target_value = data[target_index]
 
         print(f"\n{'-' * 60}")
-        print(f"Tamaño de entrada: {len(data):,} elementos")
-        print(f"Valor a buscar: {target_value} (índice {target_index})")
+        print(f"Tamano de entrada: {len(data):,} elementos")
+        print(f"Valor a buscar: {target_value} (indice {target_index})")
         print(f"{'-' * 60}")
 
         for nombre, algoritmo in algoritmos:
@@ -101,12 +97,12 @@ def run_busqueda_benchmark(
                 # Verificar que el algoritmo funciona correctamente
                 resultado = algoritmo(data, target_value)
                 if resultado is None or data[resultado] != target_value:
-                    raise RuntimeError(f"Resultado incorrecto: índice {resultado}")
+                    raise RuntimeError(f"Resultado incorrecto: indice {resultado}")
 
-                # Medir tiempo (más repeticiones para búsqueda por ser muy rápida)
+                # Medir tiempo (mas repeticiones para busqueda por ser muy rapida)
                 repeticiones = 10000 if len(data) < 100000 else 1000
 
-                timing: TimingResult = AlgorithmTimer.medir_busqueda(
+                tiempo_ns = medir_busqueda(
                     algoritmo, data, target_value, repeticiones=repeticiones
                 )
 
@@ -115,16 +111,16 @@ def run_busqueda_benchmark(
                     algoritmo=nombre,
                     tipo='busqueda',
                     tamaño=size_key,
-                    tiempo_ms=timing.tiempo_ms,
-                    tiempo_ns=timing.tiempo_ns
+                    tiempo_ms=tiempo_ns / 1_000_000,
+                    tiempo_ns=tiempo_ns
                 )
                 resultados.append(resultado_prueba)
 
                 # Mostrar tiempo en unidades apropiadas
-                if timing.tiempo_ns < 1000:
-                    print(f"{timing.tiempo_ns:.1f} ns")
+                if tiempo_ns < 1000:
+                    print(f"{tiempo_ns:.1f} ns")
                 else:
-                    print(f"{timing.tiempo_ns/1000:.2f} μs")
+                    print(f"{tiempo_ns/1000:.2f} μs")
 
             except Exception as e:
                 print(f"ERROR: {e}")
@@ -141,9 +137,9 @@ def run_busqueda_benchmark(
 
 
 def main():
-    """Función principal del script."""
+    """Funcion principal del script."""
     parser = argparse.ArgumentParser(
-        description='Benchmark de algoritmos de búsqueda'
+        description='Benchmark de algoritmos de busqueda'
     )
     parser.add_argument(
         '--output', '-o',
@@ -182,16 +178,16 @@ def main():
     print("RESUMEN DE RESULTADOS")
     print(f"{'=' * 60}")
 
-    # Agrupar por tamaño
-    por_tamaño = {}
+    # Agrupar por tamano
+    por_tamano = {}
     for r in resultados:
-        if r.tamaño not in por_tamaño:
-            por_tamaño[r.tamaño] = []
-        por_tamaño[r.tamaño].append(r)
+        if r.tamaño not in por_tamano:
+            por_tamano[r.tamaño] = []
+        por_tamano[r.tamaño].append(r)
 
-    for tamaño in sorted(por_tamaño.keys(), key=lambda x: int(x)):
-        print(f"\nTamaño: {int(tamaño):,} elementos")
-        for r in sorted(por_tamaño[tamaño], key=lambda x: x.tiempo_ns):
+    for tamano in sorted(por_tamano.keys(), key=lambda x: int(x)):
+        print(f"\nTamano: {int(tamano):,} elementos")
+        for r in sorted(por_tamano[tamano], key=lambda x: x.tiempo_ns):
             if r.tiempo_ns < 1000:
                 print(f"  {r.algoritmo:25s}: {r.tiempo_ns:10.1f} ns")
             else:
