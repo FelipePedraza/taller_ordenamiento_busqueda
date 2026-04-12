@@ -46,11 +46,11 @@ public class BenchmarkController {
             .filter(r -> r.getTipo().equals("busqueda"))
             .collect(Collectors.toList()));
 
-        // Exportar resultados
+        // Exportar resultados: incluye tanto medidos como estimados, excluye solo los omitidos
         System.out.println("\n------------------------------------------------------------");
         System.out.println("Exportando resultados...");
         for (BenchmarkResult r : resultados) {
-            if (r.getNotas() == null) {
+            if (r.getNotas() == null || esEstimado(r.getNotas())) {
                 exporter.addResult(r.getAlgoritmo(), r.getTipo(), r.getTamaño(), r.getTiempoNs());
             }
         }
@@ -66,6 +66,14 @@ public class BenchmarkController {
         System.out.println("============================================================");
     }
 
+    /**
+     * Indica si una nota corresponde a un resultado estimado (y no simplemente omitido).
+     * Las notas de estimacion comienzan con '~'.
+     */
+    private boolean esEstimado(String notas) {
+        return notas != null && notas.startsWith("~");
+    }
+
     private void mostrarResumenOrdenamiento(List<BenchmarkResult> resultados) {
         System.out.println("\n  --- ORDENAMIENTO (tiempos en ms) ---");
 
@@ -77,7 +85,12 @@ public class BenchmarkController {
             lista.stream()
                 .sorted((a, b) -> Long.compare(a.getTiempoNs(), b.getTiempoNs()))
                 .forEach(r -> {
-                    if (r.getNotas() != null) {
+                    if (esEstimado(r.getNotas())) {
+                        // Resultado estimado: mostrar tiempo junto con la nota aclaratoria
+                        System.out.printf("    %-20s: %10.3f ms  [%s]%n",
+                            r.getAlgoritmo(), r.getTiempoMs(), r.getNotas());
+                    } else if (r.getNotas() != null) {
+                        // Resultado descartado por otra razon (nunca deberia ocurrir ahora)
                         System.out.printf("    %-20s: %s%n", r.getAlgoritmo(), r.getNotas());
                     } else {
                         System.out.printf("    %-20s: %10.3f ms%n", r.getAlgoritmo(), r.getTiempoMs());

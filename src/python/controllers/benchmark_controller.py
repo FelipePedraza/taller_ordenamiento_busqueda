@@ -49,6 +49,11 @@ class BenchmarkController:
 
         return resultados_totales
 
+    @staticmethod
+    def _es_estimado(notas: str) -> bool:
+        """Indica si una nota corresponde a un resultado estimado. Las notas de estimacion comienzan con '~'."""
+        return notas is not None and notas.startswith('~')
+
     def _mostrar_resumen_ordenamiento(self, resultados: List[BenchmarkResult]):
         """Muestra resumen de ordenamiento."""
         print(f"\n{'-' * 60}")
@@ -64,7 +69,11 @@ class BenchmarkController:
         for tamano in sorted(por_tamano.keys(), key=lambda x: int(x)):
             print(f"\nTamano {int(tamano):,}:")
             for r in sorted(por_tamano[tamano], key=lambda x: x.tiempo_ms):
-                if r.notas:
+                if self._es_estimado(r.notas):
+                    # Resultado estimado: mostrar tiempo junto con la nota aclaratoria
+                    print(f"  {r.algoritmo:25s}: {r.tiempo_ms:10.2f} ms  [{r.notas}]")
+                elif r.notas:
+                    # Resultado descartado por otra razon (errores, etc.)
                     print(f"  {r.algoritmo:25s}: {r.notas}")
                 else:
                     print(f"  {r.algoritmo:25s}: {r.tiempo_ms:10.2f} ms")
@@ -92,7 +101,7 @@ class BenchmarkController:
                     print(f"  {r.algoritmo:25s}: {r.tiempo_ns/1000:10.2f} us")
 
     def _exportar_resultados(self, resultados: List[BenchmarkResult]):
-        """Exporta resultados a CSV y JSON."""
+        """Exporta resultados a CSV y JSON. Incluye resultados medidos y estimados."""
         print(f"\n{'=' * 60}")
         print("EXPORTANDO RESULTADOS")
         print(f"{'=' * 60}")
